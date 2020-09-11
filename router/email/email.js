@@ -3,6 +3,7 @@ var app = express()
 var router = express.Router();
 // 상대경로
 var path = require('path')
+// var mysql = require('../../db.template');
 var mysql = require('../../secret');
 
 // 제출을 눌렀을 때.
