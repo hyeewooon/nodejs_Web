@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>email form</title>
+</head>
+<body>
+    <!-- form 제출을 눌렀을 때 -->
+    <form action="/email/form" method="post">
+        email : <input type="text" name="email"> <br/>
+        <input type="submit">
+    </form>
+
+    <button class="ajaxsend">ajaxsend</button>
+
+    <div class="resultclass"></div>
+
+    <script>
+        document.querySelector('.ajaxsend').addEventListener('click', function(){
+            var inputdata = document.forms[0].elements[0].value;
+            sendAjax('http://localhost:3000/email/ajax', inputdata);
+        })
+
+        function sendAjax(url, data){
+            //json object를 문자열로 만들어진 JSON 데이터로 변환하여 보낸다. 
+            var data = {'email' : data};
+            data = JSON.stringify(data);
+            
+            // xhr객체를 만든 후 open 메소드로 요청을 열고 
+            // HTTP메소드와 주소를 설정한 뒤
+            // send 메소드로 요청을 서버로 보낸다.
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', url);
+            xhr.setRequestHeader('Content-Type', "application/json");
+            xhr.send(data);
+
+            //데이터 수신이 완료되면 표시
+            xhr.addEventListener('load', function(){
+                //responseText 프로퍼티는 서버에 요청하여 응답으로 받은 데이터를 문자열로 반환합니다.
+                // console.log(xhr.responseText);
+
+                var result = JSON.parse(xhr.responseText);
+                var resultDiv = document.querySelector(".resultclass");
+                if(result.result !== "ok"){
+                    resultDiv.innerHTML = "your mail is not found"
+                }
+                else {resultDiv.innerHTML = result.name;}
+            });
+        }
+    </script>
+</body>
+</html>
